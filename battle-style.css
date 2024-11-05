@@ -34,3 +34,13 @@
   position: absolute;
   cursor: crosshair;
 }
+
+.back_btn {
+  text-align: center;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: none;
+  width: 300px;
+  height: 45px;
+  margin-top: 24px;
+}

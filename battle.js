@@ -19,6 +19,9 @@ let xPos; //randomBallの座標取得用
 let yPos;
 
 window.onload = function () {
+  let data = sessionStorage.getItem("result");
+  console.log(data);
+
   document.onmousemove = function (event) {
     playerMove(event);
   };
@@ -140,5 +143,14 @@ function rdm(n) {
 function gameOver() {
   gameRunning = false;
   clearInterval(intervalId);
+  sessionStorage.clear();
   console.log("ゲーム終了");
+}
+
+function backPage() {
+  if ("referrer" in document) {
+    window.location = document.referrer;
+  } else {
+    window.history.back();
+  }
 }

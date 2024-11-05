@@ -36,6 +36,9 @@ const nextstgbtn = document.getElementsByClassName("nextbun")[1];
 const setturns = document.getElementsByClassName("turns")[1];
 const count = document.getElementsByClassName("count")[1];
 
+// submitボタン
+const battleBtn = document.getElementsByClassName("nextbun")[1];
+
 //上記したimg名をURLの形式に変換して、一つの配列にいれる
 let img_tag_arr = [];
 for (let i = 0; i < 10; i++) {
@@ -58,6 +61,7 @@ function gamestart() {
   //　カウントリセット
   setturns.innerHTML = "残りターン数: " + turns + "ターン";
   count.innerHTML = "ペアになったカード: " + countUnit + "組";
+  sessionStorage.clear();
 
   let arr = []; //カードの種別番号格納
   for (let i = 0; i < 10; i++) {
@@ -161,6 +165,10 @@ function gameend(unit) {
   resultturns.innerHTML = "残りターン数: " + turns + "ターン";
   let recount = document.getElementsByClassName("count")[0];
   recount.innerHTML = "ペアになったカード: " + countUnit + "組";
+
+  // データ保存
+  sessionStorage.setItem("result", countUnit);
+
   restartbtn.disabled = false;
   restartbtn.innerHTML = "もう一度神経衰弱をする";
   nextstgbtn.disabled = false;
@@ -173,4 +181,8 @@ function gameend(unit) {
   flgFirst = true;
   countUnit = 0;
   turns = setTurns;
+}
+
+function moveBattle() {
+  window.location.href = "../battle.html";
 }
