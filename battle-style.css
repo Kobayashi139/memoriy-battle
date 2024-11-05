@@ -25,10 +25,12 @@
   position: absolute;
 }
 .player {
-  left: 44%;
+  left: 50%;
   top: 80%;
+  align-items: center;
   width: 30px;
   height: 30px;
   background-color: azure;
   position: absolute;
+  cursor: crosshair;
 }
