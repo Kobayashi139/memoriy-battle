@@ -1,0 +1,137 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      .main {
+        width: 500px;
+        height: 500px;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        background: #333333;
+      }
+      .blk {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+      }
+    </style>
+    <script>
+      var obk = document.getElementsByClassName("blk");
+      var vx = [1, 1, 1, 1, 1, 1];
+      var vy = [1, 1, 1, 1, 1, 1];
+      var dx = [];
+      var dy = [];
+      var fgx = [
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+      ];
+      var id;
+      function init() {
+        var col = ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ff00ff"]; //ブロックの色
+        for (
+          i = 0;
+          i < obk.length;
+          i++ //ブロックの各プロパティの初期化
+        ) {
+          obk[i].style.left = rdm(450) + "px";
+          obk[i].style.top = rdm(450) + "px";
+          obk[i].style.background = col[rdm(5)];
+          if (rdm(2) == 0) {
+            dx[i] = 1;
+          } else {
+            dx[i] = -1;
+          }
+          if (rdm(2) == 0) {
+            dy[i] = 1;
+          } else {
+            dy[i] = -1;
+          }
+        }
+        id = setInterval("bMove()", 5);
+        return;
+      }
+      function bMove() {
+        var i, cx, cy;
+        for (i = 0; i < obk.length; i++) {
+          cx = parseInt(obk[i].style.left) + vx[i] * dx[i];
+          cy = parseInt(obk[i].style.top) + vy[i] * dy[i];
+          obk[i].style.left = cx + "px";
+          obk[i].style.top = cy + "px";
+          for (
+            k = 0;
+            k < obk.length;
+            k++ //5個のブロックの相互の重なり判定
+          ) {
+            if (k != i) {
+              //同じブロック以外との重なり判定
+              fgx[i][k] = hit(obk[i], obk[k], fgx[i][k]);
+              if (fgx[i][k] == 1) {
+                dx[i] = dx[i] * -1;
+                dx[k] = dx[k] * -1;
+              }
+              if (fgx[i][k] == 0) {
+                dy[i] = dy[i] * -1;
+                dy[k] = dy[k] * -1;
+              }
+            }
+          }
+          if (cx <= 0 || cx >= 450) {
+            dx[i] = dx[i] * -1;
+          }
+          if (cy <= 0 || cy >= 450) {
+            dy[i] = dy[i] * -1;
+          }
+        }
+        return;
+      }
+      function hit(obj1, obj2, fg) {
+        //戻り値 0::y方向から，1:x方向から，2：x方向のみ重なり 3：y方向のみ重なり 4:両方向重なり無し
+        var i, xv1, yv1, xv2, xy2, w1, h1, w2, h2, xlen, ylen;
+        var o1 = window.getComputedStyle(obj1, null);
+        var o2 = window.getComputedStyle(obj2, null);
+        xv1 = parseInt(o1.getPropertyValue("left"));
+        yv1 = parseInt(o1.getPropertyValue("top"));
+        xv2 = parseInt(o2.getPropertyValue("left"));
+        yv2 = parseInt(o2.getPropertyValue("top"));
+        w1 = parseInt(o1.getPropertyValue("width"));
+        h1 = parseInt(o1.getPropertyValue("height"));
+        w2 = parseInt(o2.getPropertyValue("width"));
+        h2 = parseInt(o2.getPropertyValue("height"));
+        xlen = Math.abs(xv1 + w1 / 2 - (xv2 + w2 / 2)); //x方向の中心間距離
+        ylen = Math.abs(yv1 + h1 / 2 - (yv2 + h2 / 2)); //y方向の中心間距離
+        if (xlen < (w1 + w2) / 2 && ylen < (h1 + h2) / 2) {
+          if (fg == 2) {
+            //y方向の判定
+            return 0; //y方向からの重なり
+          } else {
+            return 1;
+          } //x方向からの重なり
+        } else if (xlen < (w1 + w2) / 2) {
+          return 2;
+        } //x方向のみ重なりあり
+        else if (ylen < (h1 + h2) / 2) {
+          return 3;
+        } //y方向のみ重なりあり
+        return 4;
+      }
+      function rdm(n) {
+        return Math.floor(Math.random() * n);
+      }
+    </script>
+  </head>
+  <body onload="init()">
+    <div class="main">
+      <div class="blk"></div>
+      <div class="blk"></div>
+      <div class="blk"></div>
+      <div class="blk"></div>
+      <div class="blk"></div>
+      <div class="pad"></div>
+      <div class="ball"></div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="js">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>神経衰弱バトル</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>神経衰弱バトル</h1>
+    <div class="result_board">
+      <div class="resultmsg">神経衰弱バトル</div>
+      <div class="turns">ターン数: 10ターン</div>
+      <div class="count">カードを手に入れてバトルを有利にしよう！</div>
+      <button class="nextbun" onclick="gamestart()" disabled>
+        神経衰弱を始める
+      </button>
+      <button class="nextbun" onclick="gamestart()" disabled>
+        いきなりバトルを始める
+      </button>
+    </div>
+
+    <div class="game_board">
+      <button class="card back"></button>
+      <button class="card back"></button>
+      <button class="card back"></button>
+      <button class="card back"></button>
+      <button class="card back"></button>
+      <button class="card back"></button>
+      <button class="card back"></button>
+      <button class="card back"></button>
+      <button class="card back"></button>
+      <button class="card back"></button>
+      <button class="card back"></button>
+      <button class="card back"></button>
+      <button class="card back"></button>
+      <button class="card back"></button>
+      <button class="card back"></button>
+      <button class="card back"></button>
+      <button class="card back"></button>
+      <button class="card back"></button>
+      <button class="card back"></button>
+      <button class="card back"></button>
+    </div>
+    <div class="turns">残りターン数: 10ターン</div>
+    <div class="count">ペアになったカード: 0組</div>
+    <script src="index.js"></script>
+  </body>
+</html>
