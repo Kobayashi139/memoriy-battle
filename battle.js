@@ -63,24 +63,53 @@ function playerMove(event) {
   }
 }
 
+//getComputedStyleで実装する
 function overjudge() {
+  let playerRect = window.getComputedStyle(player);
+  let playerleft = parseInt(playerRect.getPropertyValue("left"));
+  // 左辺座標＋要素の幅＝右辺の座標
+  let playerright = playerleft + parseInt(playerRect.getPropertyValue("width"));
+  let playertop = parseInt(playerRect.getPropertyValue("top"));
+  let playerbottom =
+    playertop + parseInt(playerRect.getPropertyValue("height"));
+
   for (let i = 0; i < movingBalls.length; i++) {
-    const playerRect = player.getBoundingClientRect(); // プレイヤーの位置とサイズを取得
-    for (let i = 0; i < movingBalls.length; i++) {
-      const ballRect = movingBalls[i].getBoundingClientRect(); // 各ボールの位置とサイズを取得
-      if (
-        playerRect.left < ballRect.right &&
-        playerRect.right > ballRect.left &&
-        playerRect.top < ballRect.bottom &&
-        playerRect.bottom > ballRect.top
-      ) {
-        score = score + 1;
-        gameOver();
-        break;
-      }
+    let ballRect = window.getComputedStyle(movingBalls[i]); // 各ボールの位置とサイズを取得
+    let ballleft = parseInt(ballRect.getPropertyValue("left"));
+    let ballright = ballleft + parseInt(ballRect.getPropertyValue("width"));
+    let balltop = parseInt(ballRect.getPropertyValue("top"));
+    let ballbottom = balltop + parseInt(ballRect.getPropertyValue("height"));
+
+    if (
+      playerleft < ballright &&
+      playerright > ballleft &&
+      playertop < ballbottom &&
+      playerbottom > balltop
+    ) {
+      score = score + 1;
+      gameOver();
+      break;
     }
   }
 }
+
+//getBoundingClientrect()で実装する
+// function overjudge() {
+//   let playerRect = player.getBoundingClientRect(); // プレイヤーの位置とサイズを取得
+//   for (let i = 0; i < movingBalls.length; i++) {
+//     let ballRect = movingBalls[i].getBoundingClientRect(); // 各ボールの位置とサイズを取得
+//     if (
+//       playerRect.left < ballRect.right &&
+//       playerRect.right > ballRect.left &&
+//       playerRect.top < ballRect.bottom &&
+//       playerRect.bottom > ballRect.top
+//     ) {
+//       score = score + 1;
+//       gameOver();
+//       break;
+//     }
+//   }
+// }
 
 function randomMove() {
   for (let i = 0; i < movingBalls.length; i++) {
