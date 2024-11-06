@@ -1,13 +1,19 @@
 // 読み取り
-let balls = document.getElementsByClassName("ball");
-let movingBalls = document.getElementsByClassName("moving");
-let emitBalls = document.getElementsByClassName("emit");
-let enemy = document.getElementsByClassName("enemy")[0];
-let player = document.getElementsByClassName("player")[0];
+const field = document.getElementsByClassName("field")[0];
+const movingBalls = document.getElementsByClassName("moving");
+const emitBalls = document.getElementsByClassName("emit");
+const enemy = document.getElementsByClassName("enemy")[0];
+const player = document.getElementsByClassName("player")[0];
+
+// ポップアップ情報の取得
+const result_board = document.getElementsByClassName("result_board")[0];
+const resultmsg = document.getElementsByClassName("resultmsg")[0];
+const battleStartbtn = document.getElementsByClassName("nextbun")[0];
+const backStagebtn = document.getElementsByClassName("nextbun")[1];
 
 //各パラメータの初期化
-let fps = 10;
-let timeSpeed = 1000;
+const fps = 10;
+const timeSpeed = 1000;
 let score = 0;
 let intervalId; //setIntervalのIDを保持
 let gameRunning = true; //ゲームが続いているか
@@ -21,8 +27,9 @@ let xPos; //randomBallの座標取得用
 let yPos;
 
 // cadeDataをもとにrandomBallの数を決める
-let cadeData = 5;
-//cadeData = sessionStorage.getItem("result");
+let cadeData = 0;
+cadeData = sessionStorage.getItem("result");
+cadeData = 9;
 const ballLength = movingBalls.length - cadeData;
 if (cadeData < 2) {
   speed = 2.5;
@@ -31,6 +38,16 @@ if (cadeData < 2) {
 }
 
 window.onload = function () {
+  battleStartbtn.disabled = false;
+  backStagebtn.disabled = false;
+  result_board.style.display = "block";
+};
+
+function gamestart() {
+  battleStartbtn.disabled = true;
+  backStagebtn.disabled = true;
+  result_board.style.display = "none";
+
   document.onmousemove = function (event) {
     playerMove(event);
   };
@@ -58,17 +75,25 @@ window.onload = function () {
       overjudge();
     }
   }, fps); //10ミリ秒ごと
-};
+}
 
 function playerMove(event) {
   if (gameRunning === true) {
-    //パドルの1コマの移動処理
-    if (event.clientX > 23 && event.clientX < 492) {
+    let fieldRect = field.getBoundingClientRect();
+    let playerRect = player.getBoundingClientRect();
+    //1コマの移動処理
+    if (
+      event.clientX > fieldRect.left + playerRect.width / 2 && //要素のサイズを考慮する
+      event.clientX < fieldRect.right - playerRect.width / 2
+    ) {
       //フィールドの範囲で動ける
-      player.style.left = event.clientX - 23 + "px";
+      player.style.left = event.clientX - playerRect.width / 2 - 7 + "px"; //カーソルを中心にする
     }
-    if (event.clientY > 23 && event.clientY < 492) {
-      player.style.top = event.clientY - 23 + "px";
+    if (
+      event.clientY > fieldRect.top + playerRect.height / 2 &&
+      event.clientY < fieldRect.bottom - playerRect.height / 2
+    ) {
+      player.style.top = event.clientY - playerRect.height / 2 - 88 + "px";
     }
     overjudge();
     return;
