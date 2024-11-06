@@ -1,32 +1,41 @@
+// 読み取り
 let balls = document.getElementsByClassName("ball");
 let movingBalls = document.getElementsByClassName("moving");
 let emitBalls = document.getElementsByClassName("emit");
 let enemy = document.getElementsByClassName("enemy")[0];
 let player = document.getElementsByClassName("player")[0];
 
-let speed = 1;
-let xSpeed = [1, 1, 1, 1, 1, 1]; //水平方向の速度
-let ySpeed = [1, 1, 1, 1, 1, 1]; //垂直方向の速度
-let xDirection = []; //水平方向
-let yDirection = []; //垂直方向
+//各パラメータの初期化
 let fps = 10;
 let timeSpeed = 1000;
 let score = 0;
 let intervalId; //setIntervalのIDを保持
 let gameRunning = true; //ゲームが続いているか
+let speed = 1; //速さ
+let xSpeed = [];
+let ySpeed = [];
+let xDirection = []; //水平方向
+let yDirection = []; //垂直方向
 
 let xPos; //randomBallの座標取得用
 let yPos;
 
-window.onload = function () {
-  let data = sessionStorage.getItem("result");
-  console.log(data);
+// cadeDataをもとにrandomBallの数を決める
+let cadeData = 5;
+//cadeData = sessionStorage.getItem("result");
+const ballLength = movingBalls.length - cadeData;
+if (cadeData < 2) {
+  speed = 2.5;
+} else if (cadeData < 6) {
+  speed = 2;
+}
 
+window.onload = function () {
   document.onmousemove = function (event) {
     playerMove(event);
   };
 
-  for (let i = 0; i < movingBalls.length; i++) {
+  for (let i = 0; i < ballLength; i++) {
     //ballにランダムな開始位置を与える
     movingBalls[i].style.left = rdm(450) + "px";
     movingBalls[i].style.top = rdm(450) + "px";
@@ -76,7 +85,7 @@ function overjudge() {
   let playerbottom =
     playertop + parseInt(playerRect.getPropertyValue("height"));
 
-  for (let i = 0; i < movingBalls.length; i++) {
+  for (let i = 0; i < ballLength; i++) {
     let ballRect = window.getComputedStyle(movingBalls[i]); // 各ボールの位置とサイズを取得
     let ballleft = parseInt(ballRect.getPropertyValue("left"));
     let ballright = ballleft + parseInt(ballRect.getPropertyValue("width"));
@@ -115,7 +124,9 @@ function overjudge() {
 // }
 
 function randomMove() {
-  for (let i = 0; i < movingBalls.length; i++) {
+  for (let i = 0; i < ballLength; i++) {
+    xSpeed.push(speed); //水平方向の速度
+    ySpeed.push(speed); //垂直方向の速度
     xPos = parseInt(movingBalls[i].style.left) + xSpeed[i] * xDirection[i];
     yPos = parseInt(movingBalls[i].style.top) + ySpeed[i] * yDirection[i];
     movingBalls[i].style.left = xPos + "px";
