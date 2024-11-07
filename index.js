@@ -9,8 +9,7 @@ let cardFirst;
 // そろえた枚数(ペアができるたびに+1 10ペアで終了)
 let countUnit = 0;
 // 残りターン数
-const setTurns = 10;
-let turns = setTurns;
+let turns = 10;
 
 // imgのURL一覧
 let img_arr = [
@@ -100,6 +99,7 @@ function shuffle(arr) {
   return arr;
 }
 
+// フラグを付けて、カードをめくれなくするなど
 // カードクリック時の処理
 function turn(cardnum, e) {
   let element = e.target; //クリックしたカード
@@ -141,6 +141,7 @@ function turn(cardnum, e) {
         }
       }, 650); //0.65秒後に行う（２枚目のカードを表示する時間）
     } else if (turns === 0) {
+      console.log("turn0");
       gameend(countUnit);
     } else {
       backTimer = setTimeout(function () {
@@ -180,7 +181,7 @@ function gameend(unit) {
   backTimer = NaN;
   flgFirst = true;
   countUnit = 0;
-  turns = setTurns;
+  turns = 10;
 }
 
 function moveBattle() {
