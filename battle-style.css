@@ -22,6 +22,24 @@ html body {
   margin-top: 24px;
 }
 
+.count_board {
+  display: none;
+  z-index: 8;
+  width: 100px;
+  height: 100px;
+  margin: auto;
+  color: aliceblue;
+  background-color: #2d89accf;
+  border-radius: 10px;
+  position: absolute;
+  top: 50%;
+  left: 40%;
+  text-align: center;
+  font-size: 5em;
+  font-weight: bold;
+  padding: 2px, 0;
+}
+
 .result_board {
   display: none;
   z-index: 10;

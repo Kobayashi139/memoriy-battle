@@ -12,6 +12,7 @@ const resultmsg = document.getElementsByClassName("resultmsg")[0];
 const battleStartbtn = document.getElementsByClassName("nextbun")[0];
 const backStagebtn = document.getElementsByClassName("nextbun")[1];
 const limitmsg = document.getElementsByClassName("count")[0];
+const countdownmsg = document.getElementsByClassName("count_board")[0];
 
 //各パラメータの初期化
 const fps = 10;
@@ -19,7 +20,7 @@ const timeSpeed = 1000;
 let score = 0;
 let intervalId; //setIntervalのIDを保持
 let setLimitTime; //制限時間用
-let gameRunning = true; //ゲームが続いているか
+let gameRunning = false; //ゲームが続いているか
 let speed = 1; //速さ
 let xSpeed = [];
 let ySpeed = [];
@@ -49,10 +50,33 @@ window.onload = function () {
   result_board.style.display = "block";
 };
 
+function sleep(msec) {
+  return new Promise(function (resolve) {
+    setTimeout(function () {
+      resolve();
+    }, msec); //1000ミリ秒ごとにresolveを呼び出す
+  });
+}
+async function countdown() {
+  //非同期関数
+  countdownmsg.style.display = "block";
+  countdownmsg.innerHTML = "4";
+  for (i = 0; i < 4; i++) {
+    await sleep(1000); //1秒待機
+    console.log("スタートまで" + i);
+    countdownmsg.innerHTML = 3 - i;
+  }
+  countdownmsg.style.display = "none";
+  gameRunning = true;
+  setLimitTime = new Date().getTime() + estabLimit; //タイマーの残り時間
+  startTimer(); // タイマー開始
+}
+
 function gamestart() {
   battleStartbtn.disabled = true;
   backStagebtn.disabled = true;
   result_board.style.display = "none";
+  countdown(); //カウントダウン
 
   document.onmousemove = function (event) {
     playerMove(event);
@@ -75,70 +99,70 @@ function gamestart() {
       yDirection[i] = -1;
     }
   }
+  console.log(gameRunning);
+  // ゲームループ開始
   intervalId = setInterval(function () {
     if (gameRunning) {
+      //gameRuning===trueの時だけ起動する
       randomMove();
       overjudge();
     }
   }, fps); //10ミリ秒ごと
-
-  setLimitTime = new Date().getTime() + estabLimit; //タイマーの残り時間
-  startTimer(); // タイマー開始
 }
 
 function playerMove(event) {
-  if (gameRunning === true) {
-    let fieldRect = field.getBoundingClientRect();
-    let playerRect = player.getBoundingClientRect();
-    let scrollX = window.scrollX; // 横スクロールの位置
-    let scrollY = window.scrollY; // 縦スクロールの位置
+  let fieldRect = field.getBoundingClientRect();
+  let playerRect = player.getBoundingClientRect();
+  let scrollX = window.scrollX; // 横スクロールの位置
+  let scrollY = window.scrollY; // 縦スクロールの位置
 
-    // //1コマの移動処理
-    if (
-      // pageX,Y：ページ全体でのマウスの位置座標を取得
-      event.pageX > scrollX + fieldRect.left &&
-      event.pageX < scrollX + fieldRect.right - playerRect.width //左上に座標点があるので
-    ) {
-      //フィールドの範囲で動ける
-      player.style.left = event.pageX - scrollX - fieldRect.left + "px";
-    }
-    if (
-      event.pageY > scrollY + fieldRect.top &&
-      event.pageY < scrollY + fieldRect.bottom - playerRect.height //上側に座標点があるので
-    ) {
-      player.style.top = event.pageY - scrollY - fieldRect.top + "px";
-    }
-    overjudge();
-    return;
+  // //1コマの移動処理
+  if (
+    // pageX,Y：ページ全体でのマウスの位置座標を取得
+    event.pageX > scrollX + fieldRect.left &&
+    event.pageX < scrollX + fieldRect.right - playerRect.width //左上に座標点があるので
+  ) {
+    //フィールドの範囲で動ける
+    player.style.left = event.pageX - scrollX - fieldRect.left + "px";
   }
+  if (
+    event.pageY > scrollY + fieldRect.top &&
+    event.pageY < scrollY + fieldRect.bottom - playerRect.height //上側に座標点があるので
+  ) {
+    player.style.top = event.pageY - scrollY - fieldRect.top + "px";
+  }
+  overjudge();
+  return;
 }
 
 // getBoundingClientrect()で実装する
 function overjudge() {
-  let playerRect = player.getBoundingClientRect(); // プレイヤーの位置とサイズを取得
-  let enemyRect = enemy.getBoundingClientRect(); // プレイヤーの位置とサイズを取得
-  for (let i = 0; i < movingBalls.length; i++) {
-    let ballRect = movingBalls[i].getBoundingClientRect(); // 各ボールの位置とサイズを取得
+  if (gameRunning) {
+    let playerRect = player.getBoundingClientRect(); // プレイヤーの位置とサイズを取得
+    let enemyRect = enemy.getBoundingClientRect(); // プレイヤーの位置とサイズを取得
+    for (let i = 0; i < movingBalls.length; i++) {
+      let ballRect = movingBalls[i].getBoundingClientRect(); // 各ボールの位置とサイズを取得
+      if (
+        playerRect.left < ballRect.right &&
+        playerRect.right > ballRect.left &&
+        playerRect.top < ballRect.bottom &&
+        playerRect.bottom > ballRect.top
+      ) {
+        score = score + 1;
+        gameOver();
+        break;
+      }
+    }
+    // 敵に当たったときの判定
     if (
-      playerRect.left < ballRect.right &&
-      playerRect.right > ballRect.left &&
-      playerRect.top < ballRect.bottom &&
-      playerRect.bottom > ballRect.top
+      playerRect.left < enemyRect.right &&
+      playerRect.right > enemyRect.left &&
+      playerRect.top < enemyRect.bottom &&
+      playerRect.bottom > enemyRect.top
     ) {
       score = score + 1;
       gameOver();
-      break;
     }
-  }
-  // 敵に当たったときの判定
-  if (
-    playerRect.left < enemyRect.right &&
-    playerRect.right > enemyRect.left &&
-    playerRect.top < enemyRect.bottom &&
-    playerRect.bottom > enemyRect.top
-  ) {
-    score = score + 1;
-    gameOver();
   }
 }
 
