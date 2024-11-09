@@ -88,36 +88,6 @@ function gamestart() {
 
 function playerMove(event) {
   if (gameRunning === true) {
-    // // CSSから位置とサイズを取得
-    // let fieldRect = window.getComputedStyle(field);
-    // let fieldLeft = parseInt(fieldRect.getPropertyValue("left"));
-    // let fieldWidth = parseInt(fieldRect.getPropertyValue("width"));
-    // let fieldTop = parseInt(fieldRect.getPropertyValue("top"));
-    // let fieldHeight = parseInt(fieldRect.getPropertyValue("height"));
-    // let fieldRight = fieldLeft + fieldWidth; //左端+要素の幅=右端
-    // let fieldBottom = fieldTop + fieldHeight;
-
-    // let playerRect = window.getComputedStyle(player);
-    // let playerWidth = parseInt(playerRect.getPropertyValue("width"));
-    // let playerHeight = parseInt(playerRect.getPropertyValue("height"));
-    // let scrollX = window.scrollX; // 横スクロールの位置
-    // let scrollY = window.scrollY;
-    // console.log(scrollY);
-
-    // if (
-    //   event.clientX + scrollX > fieldLeft + playerWidth / 2 &&
-    //   event.clientX + scrollX < fieldRight - playerWidth / 2
-    // ) {
-    //   player.style.left = event.clientX + scrollX - playerWidth / 2 + "px";
-    // }
-
-    // if (
-    //   event.clientY + scrollY > fieldTop + playerHeight / 2 &&
-    //   event.clientY + scrollY < fieldBottom - playerHeight / 2
-    // ) {
-    //   player.style.top = event.clientY + scrollY - playerHeight / 2 + "px";
-    // }
-
     let fieldRect = field.getBoundingClientRect();
     let playerRect = player.getBoundingClientRect();
     let scrollX = window.scrollX; // 横スクロールの位置
@@ -142,36 +112,6 @@ function playerMove(event) {
     return;
   }
 }
-
-//getComputedStyleで実装する
-// function overjudge() {
-//   let playerRect = window.getComputedStyle(player);
-//   let playerleft = parseInt(playerRect.getPropertyValue("left"));
-//   // 左辺座標＋要素の幅＝右辺の座標
-//   let playerright = playerleft + parseInt(playerRect.getPropertyValue("width"));
-//   let playertop = parseInt(playerRect.getPropertyValue("top"));
-//   let playerbottom =
-//     playertop + parseInt(playerRect.getPropertyValue("height"));
-
-//   for (let i = 0; i < ballLength; i++) {
-//     let ballRect = window.getComputedStyle(movingBalls[i]); // 各ボールの位置とサイズを取得
-//     let ballleft = parseInt(ballRect.getPropertyValue("left"));
-//     let ballright = ballleft + parseInt(ballRect.getPropertyValue("width"));
-//     let balltop = parseInt(ballRect.getPropertyValue("top"));
-//     let ballbottom = balltop + parseInt(ballRect.getPropertyValue("height"));
-
-//     if (
-//       playerleft < ballright &&
-//       playerright > ballleft &&
-//       playertop < ballbottom &&
-//       playerbottom > balltop
-//     ) {
-//       score = score + 1;
-//       gameOver();
-//       break;
-//     }
-//   }
-// }
 
 // getBoundingClientrect()で実装する
 function overjudge() {
@@ -250,24 +190,37 @@ function showSecond() {
 
 function gameOver() {
   gameRunning = false;
+  displayBoard(1);
   clearInterval(intervalId);
   clearInterval(timer);
   sessionStorage.clear();
   console.log("ゲーム終了");
 }
-
 function gameClear() {
   gameRunning = false;
+  displayBoard(2);
   clearInterval(intervalId);
   clearInterval(timer);
   sessionStorage.clear();
   console.log("ゲームクリア");
 }
 
-function backPage() {
-  if ("referrer" in document) {
-    window.location = document.referrer;
+function displayBoard(result) {
+  if (result === 1) {
+    resultmsg.innerHTML = "-GAME OVER-";
+    limitmsg.innerHTML = "敵の攻撃にやられてしまった……";
   } else {
-    window.history.back();
+    resultmsg.innerHTML = "-GAME CLEAR!!-";
+    limitmsg.innerHTML = "敵は疲れ果てて死んだようだ";
   }
+  battleStartbtn.innerText = "もう一度バトルを開始する";
+  backStagebtn.innerText = "神経衰弱から始める";
+  battleStartbtn.disabled = false;
+  backStagebtn.disabled = false;
+  result_board.style.display = "block";
+}
+
+function backPage() {
+  sessionStorage.clear();
+  window.location.href = "../index.html";
 }
