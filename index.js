@@ -8,14 +8,18 @@ let flgFirst = true;
 let cardFirst;
 // そろえた枚数(ペアができるたびに+1 10ペアで終了)
 let countUnit = 0;
-// 残りターン数
-let turns = 10;
+//初期ターン数
+const initTurns = 5;
+//残りターン数
+let turns = initTurns;
 // ゲーム中
 let gamePlaying = false;
 // テスト用強制配列
 let cheat = true;
 // カードチェック中
 let isChecking = false;
+// クラスリセット用
+let cardClsReset;
 
 // imgのURL一覧
 let img_arr = [
@@ -76,23 +80,21 @@ function gamestart() {
     arr.push(i); //2枚同じカードを入れる必要があるため
     arr.push(i);
   } //[0,0,1,1,2,2,...........8,8,9,9] 合計20の要素
-  console.log(arr);
   shuffle(arr); // シャッフル関数起動：結果＝ [1,7,3,4,4,5......]
-  console.log(arr);
 
   // カードの位置を設定
-  const cards = document.getElementsByClassName("card");
+  const cards = document.getElementsByClassName("card"); //カードを取得
   for (let i = 0; i < cards.length; i++) {
     // カードの初期化
-    cards[i].classList.add("back"); // 全てのカードを裏向きにする
     cards[i].style.backgroundImage = ""; // 画像をリセット
-    cards[i].classList.remove("finish");
+    cards[i].className = "card";
 
     let cx = (i % 5) * 100; // X座標（例: 100px間隔）
     let cy = Math.floor(i / 5) * 100; // Y座標（例: 100px間隔）
     cards[i].style.left = cx + "px";
     cards[i].style.top = cy + "px";
     cards[i].classList.add(`${arr[i]}`);
+    cards[i].classList.add("back"); // 全てのカードを裏向きにする
     cards[i].onclick = turn.bind(null, arr[i]); // クリックイベント設定
   }
 }
@@ -108,7 +110,6 @@ function shuffle(arr) {
       arr[i] = cheatArr[i];
     }
     cheat = false;
-    console.log(arr);
   } else {
     let n = arr.length; //配列の末尾を知る 20
     while (n) {
@@ -170,12 +171,15 @@ function turn(cardnum, e) {
 
         if (countUnit === 10) {
           // すべてのペアが揃ったら停止
+          gamePlaying = false;
           gameend(countUnit);
         }
       }, 650); //0.65秒後に行う（２枚目のカードを表示する時間）
-    } else if (turns <= 0) {
+    }
+    if (turns <= 0) {
       console.log("turn0");
       gamePlaying = false;
+      isChecking = false;
       gameend(countUnit);
     } else {
       backTimer = setTimeout(function () {
@@ -216,7 +220,7 @@ function gameend(unit) {
   backTimer = NaN;
   flgFirst = true;
   countUnit = 0;
-  turns = 10;
+  turns = initTurns;
 }
 
 function moveBattle() {
