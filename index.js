@@ -10,6 +10,12 @@ let cardFirst;
 let countUnit = 0;
 // 残りターン数
 let turns = 10;
+// ゲーム中
+let gamePlaying = false;
+// テスト用強制配列
+let cheat = true;
+// カードチェック中
+let isChecking = false;
 
 // imgのURL一覧
 let img_arr = [
@@ -61,6 +67,8 @@ function gamestart() {
   setturns.innerHTML = "残りターン数: " + turns + "ターン";
   count.innerHTML = "ペアになったカード: " + countUnit + "組";
   sessionStorage.clear();
+  gamePlaying = true;
+  isChecking = false;
 
   let arr = []; //カードの種別番号格納
   for (let i = 0; i < 10; i++) {
@@ -68,8 +76,9 @@ function gamestart() {
     arr.push(i); //2枚同じカードを入れる必要があるため
     arr.push(i);
   } //[0,0,1,1,2,2,...........8,8,9,9] 合計20の要素
-
+  console.log(arr);
   shuffle(arr); // シャッフル関数起動：結果＝ [1,7,3,4,4,5......]
+  console.log(arr);
 
   // カードの位置を設定
   const cards = document.getElementsByClassName("card");
@@ -90,22 +99,39 @@ function gamestart() {
 
 //Fisher-Yatesシャッフル関数
 function shuffle(arr) {
-  let n = arr.length; //配列の末尾を知る 多分20
-  while (n) {
-    //nが0になったら終了      ここで毎回-1
-    i = Math.floor(Math.random() * n--);
-    [arr[n], arr[i]] = [arr[i], arr[n]];
+  if (cheat) {
+    console.log("チートタイム");
+    const cheatArr = [
+      1, 1, 5, 3, 0, 7, 4, 8, 6, 7, 9, 6, 2, 2, 5, 4, 0, 8, 3, 9,
+    ];
+    for (let i = 0; i < arr.length; i++) {
+      arr[i] = cheatArr[i];
+    }
+    cheat = false;
+    console.log(arr);
+  } else {
+    let n = arr.length; //配列の末尾を知る 20
+    while (n) {
+      //nが0になったら終了      ここで毎回-1
+      i = Math.floor(Math.random() * n--);
+      [arr[n], arr[i]] = [arr[i], arr[n]];
+    }
   }
+  console.log(arr);
   return arr;
 }
 
 // フラグを付けて、カードをめくれなくするなど
 // カードクリック時の処理
 function turn(cardnum, e) {
+  if (!gamePlaying || isChecking) {
+    //ゲームプレイ中またはカードチェック中は何もしない
+    return;
+  }
   let element = e.target; //クリックしたカード
   // カードのタイマー処理が動作中は return
-  if (backTimer) return; //連続で押せないように
-  //押している間にこの処理を掛けることで、他の処理を上書きさせない>>ダブルクリック対策
+  if (backTimer) return; //カードの表を表示している時間の場合何もしない
+  //この処理を掛けることで、他の処理を上書きさせない>>ダブルクリック対策
 
   // 裏向きのカードをクリックした場合は画像を表示する
   if (element.classList.contains("back")) {
@@ -123,25 +149,33 @@ function turn(cardnum, e) {
   } else {
     // ２枚目の処理
     //ターン数計算
+    isChecking = true;
     turns--;
     setturns.innerHTML = "残りターン数: " + turns + "ターン";
     console.log(turns + "ターン");
 
     if (cardFirst.className === element.className) {
       countUnit++; //揃ったペアの数
+      element.classList.add("shine"); // ペアが揃ったカードに「shine」クラスを追加
+      cardFirst.classList.add("shine");
       console.log("そろいました" + countUnit);
       count.innerHTML = "ペアになったカード: " + countUnit + "組";
+
       backTimer = setTimeout(function () {
         element.classList.add("finish"); // ペアが揃ったカードに「finish」クラスを追加
         cardFirst.classList.add("finish");
         backTimer = null;
+        isChecking = false;
+        flgFirst = true;
+
         if (countUnit === 10) {
           // すべてのペアが揃ったら停止
           gameend(countUnit);
         }
       }, 650); //0.65秒後に行う（２枚目のカードを表示する時間）
-    } else if (turns === 0) {
+    } else if (turns <= 0) {
       console.log("turn0");
+      gamePlaying = false;
       gameend(countUnit);
     } else {
       backTimer = setTimeout(function () {
@@ -151,9 +185,10 @@ function turn(cardnum, e) {
         cardFirst.style.backgroundImage = "";
         cardFirst = null;
         backTimer = null;
+        flgFirst = true;
+        isChecking = false;
       }, 650);
     }
-    flgFirst = true;
   }
 }
 
