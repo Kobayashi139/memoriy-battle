@@ -96,6 +96,21 @@ img {
   cursor: default;
 }
 
+.shine {
+  animation: flash 2s infinite;
+}
+@keyframes flash {
+  0%,
+  100% {
+    /* 明るく光るよう影を重ねる */
+    box-shadow: 0 0 10px #ffffff, 0 0 20px #ffe200, 0 0 30px #ffe200;
+  }
+  50% {
+    /* 淡く光るよう影を重ねる */
+    box-shadow: 0 0 3px #fff, 0 0 8px #ffe200, 0 0 12px #ffe200;
+  }
+}
+
 /* 文字 */
 .result,
 .count,

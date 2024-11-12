@@ -29,18 +29,20 @@ let yDirection = []; //垂直方向
 
 let xPos; //randomBallの座標取得用
 let yPos;
-const board_limit = 200; //ボードの表示する用
-const estabLimit = 210000; //残り時間計算用
+const board_limit = 20; //ボードの表示する用
+const estabLimit = 21000; //残り時間計算用
 
-// cadeDataをもとにrandomBallの数を決める
+// // cadeDataをもとにrandomBallの数を決める
 let cadeData = 0;
 cadeData = sessionStorage.getItem("result");
-cadeData = 10;
+cadeData = 5;
 const ballLength = movingBalls.length - cadeData;
-if (cadeData < 2) {
-  speed = 2.5;
-} else if (cadeData < 6) {
+if (cadeData < 1) {
   speed = 2;
+} else if (cadeData < 2) {
+  speed = 1.5;
+} else if (cadeData < 5) {
+  speed = 1;
 }
 
 window.onload = function () {
@@ -76,6 +78,9 @@ function gamestart() {
   battleStartbtn.disabled = true;
   backStagebtn.disabled = true;
   result_board.style.display = "none";
+  let str = "残り時間: " + 0 + "分 " + board_limit + "秒";
+  limit.innerText = str;
+
   countdown(); //カウントダウン
 
   document.onmousemove = function (event) {
@@ -234,6 +239,7 @@ function displayBoard(result) {
     resultmsg.innerHTML = "-GAME OVER-";
     limitmsg.innerHTML = "敵の攻撃にやられてしまった……";
   } else {
+    alert("ゲームクリア！遊んでくれてありがとう");
     resultmsg.innerHTML = "-GAME CLEAR!!-";
     limitmsg.innerHTML = "敵は疲れ果てて死んだようだ";
   }
