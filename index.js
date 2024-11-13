@@ -106,6 +106,9 @@ function shuffle(arr) {
     const cheatArr = [
       1, 1, 5, 3, 0, 7, 4, 8, 6, 7, 9, 6, 2, 2, 5, 4, 0, 8, 3, 9,
     ];
+    // const cheatArr = [
+    //   1, 1, 5, 5, 0, 0, 4, 4, 6, 6, 9, 7, 2, 2, 3, 8, 7, 8, 3, 9,
+    // ];
     for (let i = 0; i < arr.length; i++) {
       arr[i] = cheatArr[i];
     }
