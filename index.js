@@ -9,13 +9,13 @@ let cardFirst;
 // そろえた枚数(ペアができるたびに+1 10ペアで終了)
 let countUnit = 0;
 //初期ターン数
-const initTurns = 5;
+const initTurns = 10;
 //残りターン数
 let turns = initTurns;
 // ゲーム中
 let gamePlaying = false;
 // テスト用強制配列
-let cheat = true;
+let cheat = false;
 // カードチェック中
 let isChecking = false;
 // クラスリセット用
@@ -125,11 +125,10 @@ function shuffle(arr) {
   return arr;
 }
 
-// フラグを付けて、カードをめくれなくするなど
 // カードクリック時の処理
 function turn(cardnum, e) {
   if (!gamePlaying || isChecking) {
-    //ゲームプレイ中またはカードチェック中は何もしない
+    //ゲームプレイ中ではないまたはカードチェック中は何もしない
     return;
   }
   let element = e.target; //クリックしたカード
@@ -166,6 +165,7 @@ function turn(cardnum, e) {
       count.innerHTML = "ペアになったカード: " + countUnit + "組";
 
       backTimer = setTimeout(function () {
+        // setTimeoutを使って
         element.classList.add("finish"); // ペアが揃ったカードに「finish」クラスを追加
         cardFirst.classList.add("finish");
         backTimer = null;
