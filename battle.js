@@ -41,7 +41,7 @@ if (cadeData < 1) {
   speed = 2;
 } else if (cadeData < 2) {
   speed = 1.5;
-} else if (cadeData < 5) {
+} else if (cadeData < 6) {
   speed = 1;
 }
 
