@@ -1,9 +1,71 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
 html body {
   width: 100vw;
   height: 100vh;
-  padding: 10px;
   position: relative;
-  background-color: aliceblue;
+  background-color: black;
+}
+.shop {
+  background-color: rgb(58, 58, 58);
+  width: 100%;
+  height: 100px;
+  background-image: url(images/shop.png);
+  position: relative;
+  background-size: auto 140px;
+  background-repeat: repeat-x;
+}
+img.shop {
+  width: 100%;
+  height: 200px;
+  position: absolute;
+  object-fit: scale-down;
+  mask-repeat: repeat-y;
+}
+
+img.crew {
+  width: 100%;
+  height: 150px;
+  position: absolute;
+  object-fit: scale-down;
+}
+
+/* 吹き出し本体 */
+.balloon {
+  margin: 10px auto;
+  margin-top: 45px;
+  width: 500px;
+  position: relative;
+  border: 5px solid #fefefe;
+  border-radius: 3px;
+}
+
+/* beforeで三角を表現 */
+.balloon::before {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  left: 48%;
+  margin-top: -15px;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid #fefefe;
+  border-left: 15px solid transparent;
+}
+
+/* 文字 */
+.result,
+.count,
+.turns {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: 5px;
+  color: #fefefe;
+  text-align: center;
 }
 
 .startbtn {
@@ -46,6 +108,7 @@ html body {
 }
 
 .game_board {
+  margin: 0 auto;
   position: relative;
   display: flex;
   flex-wrap: wrap;
@@ -109,13 +172,4 @@ img {
     /* 淡く光るよう影を重ねる */
     box-shadow: 0 0 3px #fff, 0 0 8px #ffe200, 0 0 12px #ffe200;
   }
-}
-
-/* 文字 */
-.result,
-.count,
-.turns {
-  font-size: 1.2em;
-  font-weight: bold;
-  margin: 5px;
 }

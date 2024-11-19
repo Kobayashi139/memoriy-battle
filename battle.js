@@ -35,7 +35,7 @@ const estabLimit = 21000; //残り時間計算用
 // // cadeDataをもとにrandomBallの数を決める
 let cadeData = 0;
 cadeData = sessionStorage.getItem("result");
-// cadeData = 5;
+cadeData = 5;
 const ballLength = movingBalls.length - cadeData;
 if (cadeData < 1) {
   speed = 2;

@@ -40,10 +40,12 @@ const result_board = document.getElementsByClassName("result_board")[0];
 const resultmsg = document.getElementsByClassName("resultmsg")[0];
 const restartbtn = document.getElementsByClassName("nextbun")[0];
 const nextstgbtn = document.getElementsByClassName("nextbun")[1];
+let resultturns = document.getElementsByClassName("turns")[1];
+let recount = document.getElementsByClassName("count")[1];
 
 // 画面下部のカウント
-const setturns = document.getElementsByClassName("turns")[1];
-const count = document.getElementsByClassName("count")[1];
+const setturns = document.getElementsByClassName("turns")[0];
+const count = document.getElementsByClassName("count")[0];
 
 // submitボタン
 const battleBtn = document.getElementsByClassName("nextbun")[1];
@@ -204,9 +206,7 @@ function gameend(unit) {
     alert("全てのペアが揃いました、おめでとうございます");
   }
   // 結果表示
-  let resultturns = document.getElementsByClassName("turns")[0];
   resultturns.innerHTML = "残りターン数: " + turns + "ターン";
-  let recount = document.getElementsByClassName("count")[0];
   recount.innerHTML = "ペアになったカード: " + countUnit + "組";
 
   // データ保存
