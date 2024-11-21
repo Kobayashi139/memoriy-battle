@@ -1,9 +1,32 @@
+/* 全体の余白を消す */
+* {
+  margin: 0;
+  padding: 0;
+}
+
 html body {
   width: 100vw;
   height: 100vh;
-  padding: 10px;
   position: relative;
-  background-color: aliceblue;
+  background-color: #041116;
+  background-image: url("/images/red.png");
+  background-size: 100px 100px;
+  background-repeat: repeat;
+}
+
+body {
+  margin-bottom: 20px;
+}
+
+.result,
+.count,
+.resultmsg,
+.turns {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: 5px;
+  color: #fefefe;
+  text-align: center;
 }
 
 .startbtn {
@@ -14,7 +37,7 @@ html body {
 
 .nextbun {
   text-align: center;
-  font-size: 1rem;
+  font-size: 1.1rem;
   border-radius: 5px;
   border: none;
   width: 300px;
@@ -22,6 +45,7 @@ html body {
   margin-top: 24px;
 }
 
+/* スタート前カウントダウン */
 .count_board {
   display: none;
   z-index: 8;
@@ -29,13 +53,12 @@ html body {
   height: 100px;
   margin: auto;
   color: aliceblue;
-  background-color: #2d89accf;
   border-radius: 10px;
   position: absolute;
-  top: 50%;
-  left: 40%;
+  top: 30%;
+  left: 45.5%;
   text-align: center;
-  font-size: 5em;
+  font-size: 10em;
   font-weight: bold;
   padding: 2px, 0;
 }
@@ -47,12 +70,13 @@ html body {
   height: 300px;
   margin: auto;
   color: aliceblue;
-  background-color: #2d89accf;
+  background-color: #041116ea;
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: 51%;
   transform: translate(-53%, -50%);
-  border-radius: 10px;
+  border: 5px solid #fefefe;
+  border-radius: 3px;
   text-align: center;
   align-items: center;
   padding: 20px;
@@ -63,34 +87,37 @@ html body {
   margin: 10px;
 }
 
-.result,
-.count,
-.resultmsg,
-.turns {
-  font-size: 1.2em;
+.limit {
+  font-size: 1.5em;
   font-weight: bold;
-  margin: 5px;
+  height: 2rem;
+  padding: 1rem;
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #fefefe;
+  text-align: center;
+  background-color: #041116;
 }
 
 .field {
-  width: 500px;
-  height: 500px;
-  top: 0px;
-  left: 0px;
-  background: #333333;
+  width: 600px;
+  height: 450px;
+  margin: 0 auto;
   position: relative;
+  background: #333333;
   background-image: url("/images/gray.png");
   background-size: 100px 100px;
   background-repeat: repeat;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 0 30px #000000;
 }
 
 .ball {
   width: 10px;
   height: 10px;
-  left: -50px;
+  left: -500px;
   background-color: aliceblue;
   border-radius: 50%;
   position: absolute;
@@ -117,7 +144,7 @@ html body {
   width: 40px;
   height: 40px;
   background-image: url("/images/player.png");
-  background-color: #ddf9fb9c;
+  background-color: #ffe10069;
   background-size: 50px 50px;
   background-position: center;
   position: absolute;
@@ -127,11 +154,13 @@ html body {
 }
 
 .back_btn {
+  display: block;
+  margin: 50px auto;
+  margin-bottom: 20px;
   text-align: center;
   font-size: 1rem;
-  border-radius: 5px;
   border: none;
+  border-radius: 5px;
   width: 300px;
   height: 45px;
-  margin-top: 24px;
 }
