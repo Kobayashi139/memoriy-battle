@@ -89,8 +89,8 @@ function gamestart() {
 
   for (let i = 0; i < ballLength; i++) {
     //ballにランダムな開始位置を与える
-    movingBalls[i].style.left = rdm(450) + "px";
-    movingBalls[i].style.top = rdm(450) + "px";
+    movingBalls[i].style.left = rdm(550) + "px";
+    movingBalls[i].style.top = rdm(400) + "px";
     if (rdm(2) == 0) {
       //水平方向
       xDirection[i] = 1;
@@ -179,10 +179,10 @@ function randomMove() {
     yPos = parseInt(movingBalls[i].style.top) + ySpeed[i] * yDirection[i];
     movingBalls[i].style.left = xPos + "px";
     movingBalls[i].style.top = yPos + "px";
-    if (xPos <= 0 || xPos >= 490) {
+    if (xPos <= 0 || xPos >= 590) {
       xDirection[i] = xDirection[i] * -1;
     }
-    if (yPos <= 0 || yPos >= 490) {
+    if (yPos <= 0 || yPos >= 440) {
       yDirection[i] = yDirection[i] * -1;
     }
   }
