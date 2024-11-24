@@ -9,7 +9,7 @@ let cardFirst;
 // そろえた枚数(ペアができるたびに+1 10ペアで終了)
 let countUnit = 0;
 //初期ターン数
-const initTurns = 10;
+const initTurns = 15;
 //残りターン数
 let turns = initTurns;
 // ゲーム中
@@ -97,6 +97,7 @@ function gamestart() {
     cards[i].style.top = cy + "px";
     cards[i].classList.add(`${arr[i]}`);
     cards[i].classList.add("back"); // 全てのカードを裏向きにする
+    cards[i].disabled = false; //クリックできるようにする
     cards[i].onclick = turn.bind(null, arr[i]); // クリックイベント設定
   }
 }
@@ -123,7 +124,6 @@ function shuffle(arr) {
       [arr[n], arr[i]] = [arr[i], arr[n]];
     }
   }
-  console.log(arr);
   return arr;
 }
 
@@ -145,7 +145,7 @@ function turn(cardnum, e) {
   } else {
     return; // 表示されているカードは return
   }
-  console.log(element.classList); //正しく情報を得ているか確認
+  // console.log(element.classList); //正しく情報を得ているか確認
 
   if (flgFirst) {
     // 1枚目の処理 一枚目ならtrue
@@ -170,6 +170,8 @@ function turn(cardnum, e) {
         // setTimeoutを使って
         element.classList.add("finish"); // ペアが揃ったカードに「finish」クラスを追加
         cardFirst.classList.add("finish");
+        cardFirst.disabled = true;
+        element.disabled = true;
         backTimer = null;
         isChecking = false;
         flgFirst = true;
@@ -182,7 +184,7 @@ function turn(cardnum, e) {
       }, 650); //0.65秒後に行う（２枚目のカードを表示する時間）
     }
     if (turns <= 0) {
-      console.log("turn0");
+      // console.log("turn0");
       gamePlaying = false;
       isChecking = false;
       gameend(countUnit);
@@ -220,7 +222,7 @@ function gameend(unit) {
   resultmsg.innerHTML = "結果発表";
   // リセット
   cardFirst = null;
-  backTimer = NaN;
+  backTimer = null;
   flgFirst = true;
   countUnit = 0;
   turns = initTurns;
