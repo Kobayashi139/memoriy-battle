@@ -1,7 +1,6 @@
 // 読み取り
 const field = document.getElementsByClassName("field")[0];
 const movingBalls = document.getElementsByClassName("moving");
-const emitBalls = document.getElementsByClassName("emit");
 const enemy = document.getElementsByClassName("enemy")[0];
 const player = document.getElementsByClassName("player")[0];
 const limit = document.getElementsByClassName("limit")[0];
@@ -14,6 +13,13 @@ const backStagebtn = document.getElementsByClassName("nextbun")[1];
 const limitmsg = document.getElementsByClassName("count")[0];
 const countdownmsg = document.getElementsByClassName("count_board")[0];
 
+// カード情報のポップアップ
+const card_board = document.getElementsByClassName("card_board")[0];
+const cardmsg = document.getElementsByClassName("cardmsg")[0];
+const ballmsg = document.getElementsByClassName("ballmsg")[0];
+const speedmsg = document.getElementsByClassName("speedmsg")[0];
+const gamestartbtn = document.getElementsByClassName("nextbun")[2];
+
 //各パラメータの初期化
 const fps = 10;
 const timeSpeed = 1000;
@@ -21,7 +27,7 @@ let score = 0;
 let intervalId; //setIntervalのIDを保持
 let setLimitTime; //制限時間用
 let gameRunning = false; //ゲームが続いているか
-let speed = 1; //速さ
+let speed = 2; //速さ
 let xSpeed = [];
 let ySpeed = [];
 let xDirection = []; //水平方向
@@ -29,28 +35,50 @@ let yDirection = []; //垂直方向
 
 let xPos; //randomBallの座標取得用
 let yPos;
-const board_limit = 20; //ボードの表示する用
-const estabLimit = 21000; //残り時間計算用
+const board_limit = 25; //ボードに表示する用残り時間
+const estabLimit = 26000; //残り時間計算用
 
 // // cadeDataをもとにrandomBallの数を決める
-let cadeData = 0;
-cadeData = sessionStorage.getItem("result");
-cadeData = 5;
+let speedLank = "MAX";
+let cadeData = sessionStorage.getItem("result");
+if (cadeData === null) {
+  cadeData = 0;
+}
+// cadeData = 5;
 const ballLength = movingBalls.length - cadeData;
-if (cadeData < 1) {
-  speed = 2;
-} else if (cadeData < 2) {
+if (cadeData > 5) {
   speed = 1.5;
-} else if (cadeData < 6) {
-  speed = 1;
+  speedLank = "EASY";
+} else if (cadeData > 3) {
+  speed = 1.8;
+  speedLank = "NORMAL";
+} else if (cadeData > 0) {
+  speed = 2;
+  speedLank = "MAX";
 }
 
+// ポップアップ表示
 window.onload = function () {
   limitmsg.innerHTML = board_limit + "秒間敵と弾を避け続けろ！";
   battleStartbtn.disabled = false;
   backStagebtn.disabled = false;
   result_board.style.display = "block";
 };
+
+// カード情報表示
+function start() {
+  // ポップアップ非表示
+  battleStartbtn.disabled = true;
+  backStagebtn.disabled = true;
+  result_board.style.display = "none";
+
+  // カード情報表示
+  cardmsg.innerHTML = "手に入れたカード: " + cadeData + "枚";
+  ballmsg.innerHTML = "弾の数: 13 → " + ballLength;
+  speedmsg.innerHTML = "スピード: MAX → " + speedLank;
+  gamestartbtn.disabled = false;
+  card_board.style.display = "block";
+}
 
 function sleep(msec) {
   return new Promise(function (resolve) {
@@ -59,6 +87,7 @@ function sleep(msec) {
     }, msec); //1000ミリ秒ごとにresolveを呼び出す
   });
 }
+
 async function countdown() {
   //非同期関数
   countdownmsg.style.display = "block";
@@ -75,9 +104,8 @@ async function countdown() {
 }
 
 function gamestart() {
-  battleStartbtn.disabled = true;
-  backStagebtn.disabled = true;
-  result_board.style.display = "none";
+  gamestartbtn.disabled = true;
+  card_board.style.display = "none";
   let str = "残り時間: " + 0 + "分 " + board_limit + "秒";
   limit.innerText = str;
 
@@ -104,7 +132,7 @@ function gamestart() {
       yDirection[i] = -1;
     }
   }
-  console.log(gameRunning);
+  // console.log(gameRunning);
   // ゲームループ開始
   intervalId = setInterval(function () {
     if (gameRunning) {
@@ -188,12 +216,6 @@ function randomMove() {
   }
   return;
 }
-
-// function releaseEmitBalls() {
-//   let rad = (eventBalls[i] / 180) * Math.PI;
-//   let velocityX = Math.cos(rad) * speed;
-//   let velocityY = Math.sin(rad) * speed;
-// }
 
 function rdm(n) {
   return Math.floor(Math.random() * n);
